@@ -1,9 +1,9 @@
 const express = require('express');
 const morgan = require('morgan');
 
-
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
+const authController = require('./controllers/authController');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./middlewares/errorHandler');
 
@@ -19,13 +19,15 @@ app.use(express.json());
 app.use(express.static(`${__dirname}/public`));
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
+  console.log(req.headers);
   next();
 });
 
 //2) Route handlers
 
 //routes
-
+app.use('/api/login', authController.login);
+app.use('/api/signup', authController.signup);
 app.use('/api/users', userRouter);
 app.use('/api/tours/', tourRouter);
 
